@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      - go-mod-cache:/go/pkg/mod
+    depends_on:
+      - db
+      - valkey
+    environment:
+      - DB_HOST=db
+      - DB_USER=sevendice
+      - DB_PASSWORD=sevendice
+      - DB_NAME=sevendice
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SESSION_SECRET=your-secret-key-here
+      - GO_ENV=development
+    # Enable debugging
+    security_opt:
+      - "seccomp:unconfined"
+    cap_add:
+      - SYS_PTRACE
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - .git/
+            - tmp/
+            - static/
+        - action: rebuild
+          path: go.mod
+        - action: rebuild
+          path: go.sum
+
+  db:
+    image: postgres:16.3
+    restart: always
+    environment:
+      - POSTGRES_USER=sevendice
+      - POSTGRES_PASSWORD=sevendice
+      - POSTGRES_DB=sevendice
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U sevendice" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  valkey:
+    image: valkey/valkey:7.2.5-alpine
+    restart: unless-stopped
+
+
+volumes:
+  postgres_data:
+  redis_data:
+  go-mod-cache:

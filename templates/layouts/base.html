@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SevenDice - {{template "title" .}}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-100 flex flex-col">
+    <nav class="bg-purple-700 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="text-xl font-bold">SevenDice</div>
+                <div class="space-x-4">
+                    <a href="/" class="hover:text-purple-200">Home</a>
+                    <a href="/groups" class="hover:text-purple-200">Groups</a>
+                    <a href="/profile" class="hover:text-purple-200">Profile</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        {{template "content" .}}
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-auto py-6">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p>© 2024 SevenDice - Find your next adventure</p>
+        </div>
+    </footer>
+</body>
+</html>
